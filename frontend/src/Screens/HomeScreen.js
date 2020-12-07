@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Row, Col, Button } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import Product from '../Components/Product'
 import { listProducts } from '../actions/productActions'
 import Loader from '../Components/Loader'
 import Message from '../Components/Message'
 import Paginate from '../Components/Paginate'
-import ProductCarousel from '../Components/ProductCarousel'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import Meta from '../Components/Meta'
 
 const HomeScreen = ({ match }) => {
@@ -28,16 +27,16 @@ const HomeScreen = ({ match }) => {
     return (
         <>
             <Meta />
-            {!keyword ? <ProductCarousel /> :
+            {/* {!keyword ? <ProductCarousel /> :
                 <Link to='/'><Button variant='outline-dark'>Go Back</Button></Link>
-            }
+            } */}
             {loading ? <Loader /> :
                 error ? <Message variant='danger'>{error}</Message> :
                     <div>
                         <h2>LATEST PRODUCTS</h2>
                         <Row>
                             {products.map((product, id) => (
-                                <Col key={id} sm={12} md={6} lg={4} xl={3}>
+                                <Col key={id} sm={12} md={3} lg={3} xl={3}>
                                     <Product product={product} />
                                 </Col>
                             ))}

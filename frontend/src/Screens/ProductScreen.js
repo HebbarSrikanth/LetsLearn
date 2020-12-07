@@ -30,7 +30,6 @@ const ProductScreen = ({ match }) => {
     const { userInfo } = userLogin
 
     const productId = match.params.id
-
     useEffect(() => {
         if (success) {
             alert('Review Submitted')
@@ -40,7 +39,7 @@ const ProductScreen = ({ match }) => {
         }
         dispatch(individualProduct(productId))
         //eslint-disable-next-line
-    }, [dispatch, match, success])
+    }, [dispatch, match, success, productId])
 
     const reviewHandler = (e) => {
         e.preventDefault()

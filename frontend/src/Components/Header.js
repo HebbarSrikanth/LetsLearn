@@ -21,29 +21,31 @@ const Header = () => {
             <LinkContainer to='/user/profile'>
                 <NavDropdown.Item>Profile</NavDropdown.Item>
             </LinkContainer>
-            <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+            <LinkContainer to='/'>
+                <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+            </LinkContainer>
         </NavDropdown>
     )
 
-    const adminUser = userInfo && userInfo.isAdmin && (
-        <NavDropdown title='Admin' id='adminmenu'>
-            <LinkContainer to='/admin/userlist'>
-                <NavDropdown.Item>Users</NavDropdown.Item>
-            </LinkContainer>
-            <LinkContainer to='/admin/productlist'>
-                <NavDropdown.Item>Products</NavDropdown.Item>
-            </LinkContainer>
-            <LinkContainer to='/admin/orders'>
-                <NavDropdown.Item>Orders</NavDropdown.Item>
-            </LinkContainer>
-        </NavDropdown>
-    )
+    // const adminUser = userInfo && userInfo.isAdmin && (
+    //     <NavDropdown title='Admin' id='adminmenu'>
+    //         <LinkContainer to='/admin/userlist'>
+    //             <NavDropdown.Item>Users</NavDropdown.Item>
+    //         </LinkContainer>
+    //         <LinkContainer to='/admin/productlist'>
+    //             <NavDropdown.Item>Products</NavDropdown.Item>
+    //         </LinkContainer>
+    //         <LinkContainer to='/admin/orders'>
+    //             <NavDropdown.Item>Orders</NavDropdown.Item>
+    //         </LinkContainer>
+    //     </NavDropdown>
+    // )
 
     return (
         <header>
             <Navbar bg="dark" variant='dark' expand="lg" collapseOnSelect>
                 <LinkContainer to='/'>
-                    <Navbar.Brand>ProShop</Navbar.Brand>
+                    <Navbar.Brand>Let's Learn</Navbar.Brand>
                 </LinkContainer>
                 <Route render={({ history }) => <SearchBox history={history} />} />
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -61,7 +63,7 @@ const Header = () => {
                                  </Nav.Link>
                             </LinkContainer>
                         }
-                        {userInfo && userInfo.isAdmin && adminUser}
+                        {/* {userInfo && userInfo.isAdmin && adminUser} */}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

@@ -2,20 +2,24 @@ import React, { useEffect } from 'react'
 import { Button, Card, Col, Form, Image, ListGroup, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { addToCart, removeFromCart } from '../actions/cartActions'
+import { addToCart, removeFromCart, fetchCartItems } from '../actions/cartActions'
 import Message from '../Components/Message'
 
 
 const Cart = ({ match, location, history }) => {
     const productId = match.params.id
+    console.log(productId)
 
     //Location Search may be to available everytime as user may just click on Cart button
     const qty = location.search ? location.search.split('=')[1] : 1
+    console.log(qty)
 
     const dispatch = useDispatch()
 
     //Fetch the items from cart using the useSelector
     const cart = useSelector(state => state.cart)
+    const userState = useSelector(state => state.userLogin)
+    const { userInfo } = userState
 
     const { cartItems } = cart
 
@@ -28,11 +32,23 @@ const Cart = ({ match, location, history }) => {
         history.push('/user/login?redirect=shipping')
     }
 
+    const handleChange = (e, item) => {
+        if (userInfo) {
+            dispatch(addToCart(item, Number(e.target.value), userInfo._id))
+        }
+    }
+
     useEffect(() => {
 
-        if (productId) {
+        if (productId && userInfo) {
+            dispatch(addToCart(productId, qty, userInfo._id))
+        } else if (userInfo) {
+            dispatch(fetchCartItems(userInfo._id))
+        }
+        else if (productId) {
             dispatch(addToCart(productId, qty))
         }
+        //eslint-disable-next-line
     }, [dispatch, productId, qty])
 
     return (
@@ -52,11 +68,11 @@ const Cart = ({ match, location, history }) => {
                                         <Col md={3}>
                                             <Link to={`/api/products/${item.product}`}>{item.name}</Link>
                                         </Col>
-                                        <Col md={2}>${item.price}</Col>
+                                        <Col md={2}>₹{item.price}</Col>
                                         <Col>
                                             <Form.Control as='select'
                                                 value={item.qty}
-                                                onChange={(e) => dispatch(addToCart(item.product, Number(e.target.value)))}
+                                                onChange={(e) => handleChange(e, item.product)}
                                             >
                                                 {
                                                     [...Array(item.countInStock)].map((val, id) =>
@@ -80,7 +96,7 @@ const Cart = ({ match, location, history }) => {
                     <ListGroup variant='flush'>
                         <ListGroup.Item>
                             <h4>Subtotal ({cartItems.reduce((acc, item) => acc + Number(item.qty), 0)}) Items</h4>
-                            <b>${cartItems.reduce((acc, item) => acc + Number(item.qty * item.price), 0).toFixed(2)}</b>
+                            <b>₹{cartItems.reduce((acc, item) => acc + Number(item.qty * item.price), 0).toFixed(2)}</b>
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <Button

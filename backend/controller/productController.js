@@ -7,7 +7,7 @@ import asyncHandler from 'express-async-handler'
 // @access Public
 const getProducts = asyncHandler(async (req, res) => {
 
-    const pageSize = 10
+    const pageSize = 5
     const page = req.query.pageNumber ? Number(req.query.pageNumber) : 1
 
     const keyword = req.query.keyword ?

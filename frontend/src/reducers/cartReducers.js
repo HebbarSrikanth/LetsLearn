@@ -7,6 +7,7 @@ export const cartReducers = (state = { cartItems: [], shippingAddress: {} }, act
             const item = action.payload
             console.log(item)
             const itemExist = state.cartItems.find(x => x.product === item.product)
+            console.log(`In Cart Reducer:${itemExist}`)
             //If present then remove all the exisitng cart values of the product and insert the present qty
             if (itemExist) {
                 return {
@@ -40,6 +41,20 @@ export const cartReducers = (state = { cartItems: [], shippingAddress: {} }, act
                 ...state,
                 paymentMethod: action.payload
             }
+
+        case types.CART_FETCH: {
+            return {
+                ...state,
+                cartItems: action.payload
+            }
+        }
+
+        case types.CART_RESET: {
+            return {
+                cartItems: [],
+                shippingAddress: {}
+            }
+        }
 
         default: return state
     }

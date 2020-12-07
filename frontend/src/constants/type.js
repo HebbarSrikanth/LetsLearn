@@ -12,6 +12,8 @@ export const types = {
     //Cart Types
     CART_ADD: 'CART_ADD',
     CART_REMOVE: 'CART_REMOVE',
+    CART_FETCH: 'CART_FETCH',
+    CART_RESET: 'CART_RESET',
 
     //Login Types
     LOGIN_REQUEST: 'LOGIN_REQUEST',

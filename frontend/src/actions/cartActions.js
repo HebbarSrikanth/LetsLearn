@@ -1,26 +1,43 @@
 import Axios from 'axios'
 import { types } from '../constants/type'
 
-export const addToCart = (id, qty) => async (dispatch, getState) => {
+export const addToCart = (id, qty, userId = '') => async (dispatch, getState) => {
 
     try {
         const { data } = await Axios.get(`/api/products/${id}`)
+        console.log(data)
 
         if (data) {
+            const item = {
+                product: data._id,
+                price: data.price,
+                image: data.image,
+                user: userId,
+                name: data.name,
+                countInStock: data.countInStock,
+                qty
+            }
+            if (userId !== '') {
+                const token = getState().userLogin.userInfo.token
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+                await Axios.post(`/cart/${userId}`, item, config)
+            } else {
+                localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+            }
+            console.log('Added successfully')
             dispatch({
                 type: types.CART_ADD,
-                payload: {
-                    product: data._id,
-                    price: data.price,
-                    image: data.image,
-                    name: data.name,
-                    countInStock: data.countInStock,
-                    qty
-                }
+                payload: item
             })
-            localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+            //localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
         }
     } catch (err) {
+        console.error(err);
         console.log(err)
     }
 }
@@ -31,6 +48,22 @@ export const removeFromCart = (id) => async (dispatch, getState) => {
         payload: id
     })
     localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+}
+
+export const fetchCartItems = (id) => async (dispatch, getState) => {
+    const token = getState().userLogin.userInfo.token
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const { data } = await Axios.get(`/cart/${id}`, config)
+    console.log(data)
+    dispatch({
+        type: types.CART_FETCH,
+        payload: data
+    })
 }
 
 export const saveShippingAddress = (address) => async (dispatch) => {
