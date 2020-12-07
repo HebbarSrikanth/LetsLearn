@@ -8,11 +8,11 @@ import Message from '../Components/Message'
 
 const Cart = ({ match, location, history }) => {
     const productId = match.params.id
-    console.log(productId)
+    // console.log(productId)
 
     //Location Search may be to available everytime as user may just click on Cart button
     const qty = location.search ? location.search.split('=')[1] : 1
-    console.log(qty)
+    // console.log(qty)
 
     const dispatch = useDispatch()
 
@@ -24,7 +24,12 @@ const Cart = ({ match, location, history }) => {
     const { cartItems } = cart
 
     const removeCart = (id) => {
-        dispatch(removeFromCart(id))
+        if (userInfo) {
+            dispatch(removeFromCart(id, userInfo._id))
+            dispatch(fetchCartItems(userInfo._id))
+        } else {
+            dispatch(removeFromCart(id))
+        }
     }
 
     const checkoutHandler = () => {
@@ -42,6 +47,7 @@ const Cart = ({ match, location, history }) => {
 
         if (productId && userInfo) {
             dispatch(addToCart(productId, qty, userInfo._id))
+            dispatch(fetchCartItems(userInfo._id))
         } else if (userInfo) {
             dispatch(fetchCartItems(userInfo._id))
         }
@@ -81,7 +87,7 @@ const Cart = ({ match, location, history }) => {
                                             </Form.Control>
                                         </Col>
                                         <Col md={2}>
-                                            <Button type='button' onClick={() => removeCart(item)}>
+                                            <Button type='button' onClick={() => removeCart(item.product)}>
                                                 <i className='fas fa-trash'></i>
                                             </Button>
                                         </Col>

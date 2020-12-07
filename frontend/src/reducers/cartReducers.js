@@ -5,9 +5,10 @@ export const cartReducers = (state = { cartItems: [], shippingAddress: {} }, act
         case types.CART_ADD:
             //Check whether the item is already present using the find
             const item = action.payload
-            console.log(item)
+            console.log(`In reducer payload is ${item}`)
+
             const itemExist = state.cartItems.find(x => x.product === item.product)
-            console.log(`In Cart Reducer:${itemExist}`)
+
             //If present then remove all the exisitng cart values of the product and insert the present qty
             if (itemExist) {
                 return {

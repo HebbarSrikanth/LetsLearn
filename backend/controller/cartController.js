@@ -37,3 +37,15 @@ export const addToCart = asyncHandler(async (req, res) => {
         res.status(500).json({ "message": `Error due to ${err}` })
     }
 })
+
+export const deleteFromCart = asyncHandler(async (req, res) => {
+    try {
+        const value = await Cart.findOneAndDelete({
+            $and: [{ product: req.params.product }, { user: req.user._id }]
+        })
+        res.json(value)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ "message": `Error due to ${err}` })
+    }
+})

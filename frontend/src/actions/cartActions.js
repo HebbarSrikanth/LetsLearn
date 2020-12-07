@@ -5,7 +5,9 @@ export const addToCart = (id, qty, userId = '') => async (dispatch, getState) =>
 
     try {
         const { data } = await Axios.get(`/api/products/${id}`)
-        console.log(data)
+        console.log(`Id is ${id}`)
+        console.log(`Qty is ${qty}`)
+        console.log(`userId is ${userId}`)
 
         if (data) {
             const item = {
@@ -26,10 +28,11 @@ export const addToCart = (id, qty, userId = '') => async (dispatch, getState) =>
                     }
                 }
                 await Axios.post(`/cart/${userId}`, item, config)
+                console.log('Added successfully in DB')
             } else {
                 localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+                console.log('Added into local storage successfully')
             }
-            console.log('Added successfully')
             dispatch({
                 type: types.CART_ADD,
                 payload: item
@@ -42,10 +45,20 @@ export const addToCart = (id, qty, userId = '') => async (dispatch, getState) =>
     }
 }
 
-export const removeFromCart = (id) => async (dispatch, getState) => {
+export const removeFromCart = (productId, userId = '') => async (dispatch, getState) => {
+    console.log(productId)
+    if (userId !== '') {
+        const token = getState().userLogin.userInfo.token
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        await Axios.delete(`/cart/${productId}`, config)
+    }
     dispatch({
         type: types.CART_REMOVE,
-        payload: id
+        payload: productId
     })
     localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
 }
